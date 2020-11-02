@@ -1,13 +1,15 @@
 import pygame
 import os
 from enemies.scorpion import Scorpion
+from enemies.troll import Troll
+from enemies.wiz import Wiz
 
 class Game:
     def __init__(self):
         self.width = 1200
         self.height = 700
         self.win= pygame.display.set_mode((self.width, self.height))
-        self.enemys= [Scorpion()]
+        self.enemys= [Scorpion(), Troll(), Wiz()]
         self.towers = []
         self.lives= 10
         self.money= 100
@@ -18,12 +20,16 @@ class Game:
 
     def run(self):
         run= True
+
+    
         clock= pygame.time.Clock()
 
         while run:
-            clock.tick(10)
+            pygame.time.delay(3)
+            clock.tick(2)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.display.quit()
                     run = False
                 
                 pos= pygame.mouse.get_pos()
@@ -32,11 +38,22 @@ class Game:
                      self.clicks.append(pos)
                      print(self.clicks)
 
+            to_delete=[]
+            for en in self.enemys:
+                if en.x < -5:
+                    to_delete.append(en)
+
+            for d in to_delete:
+                self.enemys.remove(d)
+
+            
 
 
             self.draw()
 
         pygame.quit()
+        
+
 
 
     def draw(self):
