@@ -25,8 +25,8 @@ class Game:
         clock= pygame.time.Clock()
 
         while run:
-            pygame.time.delay(3)
-            clock.tick(2)
+            # pygame.time.delay(0)
+            clock.tick(80000)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.display.quit()
@@ -40,11 +40,13 @@ class Game:
 
             to_delete=[]
             for en in self.enemys:
-                if en.x < -5:
+                if en.x < -50:
                     to_delete.append(en)
 
             for d in to_delete:
                 self.enemys.remove(d)
+
+            
 
             
 
@@ -59,7 +61,7 @@ class Game:
     def draw(self):
         self.win.blit(self.bg, (0,0))
         for click in self.clicks:
-             pygame.draw.circle(self.win, (255,0,0), (click[0], click[1]), 3, 1)
+            pygame.draw.circle(self.win, (255,0,0), (click[0], click[1]), 3, 1)
 
         #narysuj wroga
         for enemy in self.enemys:

@@ -12,7 +12,7 @@ class Enemy:
         self.animation_count = 0
         self.health = 1
         self.vel = 3
-        self.path = [(10, 130), (129, 130), (274, 140), (423, 150), (573, 150), (716, 151), (787, 205), (803, 285), (770, 341), (696, 371), (623, 399), (584, 464), (570, 530), (555, 530), (485, 615), (409, 615), (288, 615), (169, 615), (54, 615), (1, 615), (-20,900)]
+        self.path = [(30, 150), (139, 150), (289, 150), (472, 150), (578, 150), (718, 152), (788, 232), (768, 307), (734, 364), (629, 390),(593, 432), (577, 475), (576, 514), (565, 565), (526, 600), (335, 620), (181, 620), (58, 619), (0, 619), (-10,619)]
         self.x = self.path[0][0]
         self.y = self.path[0][1]
         self.img = None
@@ -31,8 +31,17 @@ class Enemy:
         self.animation_count +=1
         if self.animation_count >= len(self.imgs):
             self.animation_count = 0 
-        win.blit(self.img, (self.x, self.y))
+
+
+        for dot in self.path:
+            pygame.draw.circle(win, (255,0,0), dot, 3, 1)
+
+
+        win.blit(self.img, (self.x - self.img.get_width()/2, self.y- self.img.get_height()/2 - 30))
         self.move()
+
+       
+
 
         pass
 
@@ -51,34 +60,48 @@ class Enemy:
 
         x1,y1= self.path[self.path_pos]
         if self.path_pos + 1 >= len(self.path):  #jeśli jesteśmy na końcu iteracji przez ścieżkę
-            x2, y2= (-10, 610)   #wróg ma wyjść poza widziany obszar jeśli jest już na końcu ścieżki
+            x2, y2= (-50, 610)   #wróg ma wyjść poza widziany obszar jeśli jest już na końcu ścieżki
         else: 
             x2, y2 = self.path[self.path_pos + 1]   #w innym wypadku idziemy do kolejnego punktu
 
         #move_dis = math.sqrt((x2-x1)**2 + (y2- y1)**2)   #dystans jaki dzieli punkty 
 
          
-        direction= (x2-x1, y2-y1)   #kierunek przesunięcia
+        direction = ((x2-x1), (y2-y1))   #kierunek przesunięcia
+        length = math.sqrt((direction[0])**2 + (direction[1])**2)   #długość jaką musi przejść do punktu
+        direction = (direction[0]/length, direction[1]/length)
+
         
-
-
         if direction[0]<0 and not(self.flipped):   #jeśli wróg idzie w drugą stronę to musimy go odwrócić
             self.flipped= True
             for x, img in enumerate(self.imgs):
                 self.imgs[x] = pygame.transform.flip(img, True, False)
 
 
-        move_x, move_y= (self.x + direction[0] , self.y + direction[1] -4 )
+        move_x, move_y= (self.x + direction[0] , self.y + direction[1]  )
         # self.dis += math.sqrt((move_x - x1)**2 + (move_y - y1)**2)   #dystans o jaki chcemy przesunąć wroga
       
-        self.x = move_x
+        self.x = move_x 
         self.y= move_y 
 
 
-        # self.dis = 0
-        self.path_pos += 1
-        if self.path_pos >= len(self.path):
-            return False
+        #idzie do nastepnego punktu
+
+        if direction[0] >= 0:  #idzie w prawo 
+            if direction[1] >=0:  #idzie w dół
+                if self.x >= x2 and self.y>=y2:
+                    self.path_pos+=1
+            else:  #idzie w górę
+                if self.x >= x2 and self.y <= y2:
+                    self.path_pos += 1
+        else:  #idzie w lewo
+            if direction[1] >= 0:  #idzie w dół
+                if self.x <= x2 and self.y >= y2:
+                    self.path_pos += 1
+            else:  #idzie w górę i w lewo
+                if self.x <= x2 and self.y >= y2:
+                    self.path_pos += 1
+
 
         
 
