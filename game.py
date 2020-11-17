@@ -3,14 +3,15 @@ import os
 from enemies.scorpion import Scorpion
 from enemies.troll import Troll
 from enemies.wiz import Wiz
+from towers.ArcherTower import ArcherTower
 
 class Game:
     def __init__(self):
         self.width = 1200
         self.height = 700
         self.win= pygame.display.set_mode((self.width, self.height))
-        self.enemys= [Scorpion(), Troll(), Wiz()]
-        self.towers = []
+        self.enemys= [Scorpion()]
+        self.towers = [ArcherTower(100,300)]
         self.lives= 10
         self.money= 100
         self.bg= pygame.image.load(os.path.join("game_assets","background.jpg"))
@@ -66,7 +67,17 @@ class Game:
         #narysuj wroga
         for enemy in self.enemys:
             enemy.draw(self.win)
+
+        for tow in self.towers:
+            tow.draw(self.win)
+        
+
+
+        
+
+    
         pygame.display.update()
+        
 
 g= Game()
 g.run()

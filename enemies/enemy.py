@@ -33,10 +33,6 @@ class Enemy:
             self.animation_count = 0 
 
 
-        for dot in self.path:
-            pygame.draw.circle(win, (255,0,0), dot, 3, 1)
-
-
         win.blit(self.img, (self.x - self.img.get_width()/2, self.y- self.img.get_height()/2 - 30))
         self.move()
 
