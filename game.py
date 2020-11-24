@@ -3,7 +3,7 @@ import os
 from enemies.scorpion import Scorpion
 from enemies.troll import Troll
 from enemies.wiz import Wiz
-from towers.ArcherTower import ArcherTower
+from towers.ArcherTower import ArcherTowerLong
 
 class Game:
     def __init__(self):
@@ -11,12 +11,12 @@ class Game:
         self.height = 700
         self.win= pygame.display.set_mode((self.width, self.height))
         self.enemys= [Scorpion()]
-        self.towers = [ArcherTower(100,300)]
+        self.towers = [ArcherTowerLong(300, 300)]
         self.lives= 10
         self.money= 100
         self.bg= pygame.image.load(os.path.join("game_assets","background.jpg"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
-        self.clicks=[]  #needed just to get PATH 
+        # self.clicks=[]  #needed just to get PATH 
         
 
     def run(self):
@@ -32,20 +32,25 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.display.quit()
                     run = False
-                
-                pos= pygame.mouse.get_pos()
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                     self.clicks.append(pos)
-                     print(self.clicks)
+                #
+                # pos= pygame.mouse.get_pos()
+                #
+                # if event.type == pygame.MOUSEBUTTONDOWN:
+                #      self.clicks.append(pos)
+                #      print(self.clicks)
 
             to_delete=[]
             for en in self.enemys:
                 if en.x < -50:
                     to_delete.append(en)
 
+            #usuwa wrogów, którzy wyszli poza ekran
             for d in to_delete:
                 self.enemys.remove(d)
+
+            #przechodzi przez wieże i sprawdza czy wróg jest w strefie ataku
+            for tower in self.towers:
+                tower.attack(self.enemys)
 
             
 
@@ -61,20 +66,16 @@ class Game:
 
     def draw(self):
         self.win.blit(self.bg, (0,0))
-        for click in self.clicks:
-            pygame.draw.circle(self.win, (255,0,0), (click[0], click[1]), 3, 1)
+        # for click in self.clicks:
+        #     pygame.draw.circle(self.win, (255,0,0), (click[0], click[1]), 3, 1)
 
         #narysuj wroga
         for enemy in self.enemys:
             enemy.draw(self.win)
 
+        #narysuj wieże i łuczników
         for tow in self.towers:
             tow.draw(self.win)
-        
-
-
-        
-
     
         pygame.display.update()
         
