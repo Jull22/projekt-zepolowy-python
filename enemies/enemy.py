@@ -21,12 +21,11 @@ class Enemy:
         self.move_dis = 0
         self.dis = 0
         self.flipped= False
+        self.max_health = 10
 
     def draw(self, win):
+        #rysuje enemy - obrazek
 
-        #rysuje enemy - obrazek 
-
-        
         self.img= self.imgs[self.animation_count//3]
         self.animation_count +=1
         if self.animation_count >= len(self.imgs):
@@ -34,12 +33,22 @@ class Enemy:
 
 
         win.blit(self.img, (self.x - self.img.get_width()/2, self.y- self.img.get_height()/2 - 30))
+        self.draw_health_bar(win)
         self.move()
 
        
 
 
         pass
+
+    def draw_health_bar(self, win):
+        length=50
+        moveBy= round(length / self.max_health)
+        health_bar = moveBy * self.health
+
+        pygame.draw.rect(win, (255,0, 0), (self.x-30, self.y-75, length, 10), 0)
+        pygame.draw.rect(win, (0,255, 0), (self.x-30, self.y-75, health_bar, 10), 0)
+
 
 
     def collide(self, X, Y):
@@ -51,9 +60,7 @@ class Enemy:
         return False
 
     def move(self):
-        
         #ruch wroga
-
         x1,y1= self.path[self.path_pos]
         if self.path_pos + 1 >= len(self.path):  #jeśli jesteśmy na końcu iteracji przez ścieżkę
             x2, y2= (-50, 610)   #wróg ma wyjść poza widziany obszar jeśli jest już na końcu ścieżki
@@ -80,7 +87,6 @@ class Enemy:
         self.x = move_x 
         self.y= move_y 
 
-
         #idzie do nastepnego punktu
 
         if direction[0] >= 0:  #idzie w prawo 
@@ -105,3 +111,5 @@ class Enemy:
         self.health -= 1
         if self.health <= 0:
             return True
+
+        return False

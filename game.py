@@ -3,31 +3,36 @@ import os
 from enemies.scorpion import Scorpion
 from enemies.troll import Troll
 from enemies.wiz import Wiz
-from towers.ArcherTower import ArcherTowerLong
+from towers.ArcherTower import ArcherTowerLong, ArcherTowerShort
+import random
+import time
 
 class Game:
     def __init__(self):
         self.width = 1200
         self.height = 700
         self.win= pygame.display.set_mode((self.width, self.height))
-        self.enemys= [Scorpion()]
-        self.towers = [ArcherTowerLong(300, 300), ArcherTowerLong(900,300)]
+        self.enemys= [Wiz()]
+        self.towers = [ArcherTowerLong(300, 300), ArcherTowerShort(900,300)]
         self.lives= 10
         self.money= 100
         self.bg= pygame.image.load(os.path.join("game_assets","background.jpg"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
-        # self.clicks=[]  #needed just to get PATH 
+        # self.clicks=[]  #needed just to get PATH
+        self.timer= time.time()
         
 
     def run(self):
         run= True
-
-    
         clock= pygame.time.Clock()
 
         while run:
+            if time.time() - self.timer >= 1.5:   #co ile sekund ma wychodzić nowy wróg
+                self.timer = time.time()
+                self.enemys.append(random.choice([Troll(), Scorpion(), Wiz()]))
+
             # pygame.time.delay(0)
-            clock.tick(80000)
+            clock.tick(200)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.display.quit()

@@ -12,6 +12,7 @@ class Tower:
         self.level = 1
         self.selected= False
         self.menu= None
+        self.damage= 1
 
     def draw(self, win):
 
@@ -37,6 +38,7 @@ class Tower:
     def upgrade(self):
         """ulepszenie wieży   """
         self.level += 1
+        self.damage+= 1
         
     def get_upgrade_cost(self):
         """ cena za ulepszenie"""
