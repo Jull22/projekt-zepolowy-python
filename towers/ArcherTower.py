@@ -19,8 +19,8 @@ for x in range(1, 24):
 class ArcherTowerLong(Tower):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs= tower_imgs1
-        self.archer_imgs= archer_imgs1
+        self.tower_imgs= tower_imgs
+        self.archer_imgs= archer_imgs
         self.archer_count = 0
         self.zone = 200
         self.inZone = False
@@ -35,17 +35,14 @@ class ArcherTowerLong(Tower):
 
     def draw(self, win):
 
+        super().draw(win)
 
         if self.inZone:
             self.archer_count += 1
-            if self.archer_count >= len(self.archer_imgs) * 6:
+            if self.archer_count >= len(self.archer_imgs) * 16:
                 self.archer_count = 0
         else:
             self.archer_count=0
-
-        super().draw(win)  # rysuje wieżę
-        archer = self.archer_imgs[self.archer_count // 6]
-        win.blit(archer, ((self.x + self.width / 2) - (archer.get_width() / 3.5),(self.y - archer.get_height() * 2.2)))  # rysuje łuczników
 
 
         #draw zone
@@ -117,10 +114,10 @@ for x in range(1, 24):
 class ArcherTowerShort(ArcherTowerLong):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs = tower_imgs
-        self.archer_imgs = archer_imgs
+        self.tower_imgs = tower_imgs1
+        self.archer_imgs = archer_imgs1
         self.archer_count = 0
-        self.zone = 200
+        self.zone = 150
         self.inZone = False
         self.right = True
         self.timer = time.time()

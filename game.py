@@ -32,7 +32,7 @@ class Game:
                 self.enemys.append(random.choice([Troll(), Scorpion(), Wiz()]))
 
             # pygame.time.delay(0)
-            clock.tick(200)
+            clock.tick(80)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.display.quit()

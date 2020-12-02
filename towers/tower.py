@@ -18,7 +18,11 @@ class Tower:
 
         img = self.tower_imgs[self.level-1]
         win.blit(img, ((self.x + self.width) - (img.get_width())/3, (self.y - img.get_height())))
-        
+
+        archer = self.archer_imgs[self.archer_count // 16]
+        win.blit(archer, ((self.x + self.width / 2) - (archer.get_width() / 3.5),
+                          (self.y - archer.get_height() * 2.2)))                    # rysuje łuczników
+
     def click(self, X, Y):
         """wybranie wieży
             param:X: int
