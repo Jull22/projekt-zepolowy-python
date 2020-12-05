@@ -10,7 +10,7 @@ archer_imgs1 = []
 # wieża długodystansowa
 for x in range(1,4):
     tower_imgs1.append(
-        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/2", str(x) + ".png")), (190, 150)))
+        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/2", str(x) + ".png")), (120, 120)))
 # łucznik
 for x in range(2, 19):
     archer_imgs1.append(
@@ -45,8 +45,8 @@ class ArcherTowerLong(Tower):
 
         archer = self.archer_imgs[self.archer_count // 9]
 
-        win.blit(archer, ((self.x + self.width / 2) - (archer.get_width() / 4.8),
-                          (self.y - archer.get_height() * 2.24)))                    # rysuje łuczników
+        win.blit(archer, ((self.x + self.width / 2) - (archer.get_width() / 4.6),
+                          (self.y - archer.get_height() * 1.9)))                    # rysuje łuczników
 
 
 
@@ -90,7 +90,7 @@ tower_imgs= []
 for x in range(1, 4):
     tower_imgs.append(
         pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/1", str(x) + ".png")),
-                               (170, 160)))
+                               (120, 120)))
 # łucznik
 archer_imgs= []
 for x in range(2, 19):
