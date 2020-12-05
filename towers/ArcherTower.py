@@ -10,17 +10,17 @@ archer_imgs1 = []
 # wieża długodystansowa
 for x in range(1,4):
     tower_imgs1.append(
-        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/1", str(x) + ".png")), (150, 130)))
+        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/2", str(x) + ".png")), (190, 150)))
 # łucznik
-for x in range(1, 24):
+for x in range(2, 19):
     archer_imgs1.append(
-        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archer/1", str(x) + ".png")), (90, 90)))
+        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archer/2", str(x) + ".png")), (100, 100)))
 
 class ArcherTowerLong(Tower):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs= tower_imgs
-        self.archer_imgs= archer_imgs
+        self.tower_imgs= tower_imgs1
+        self.archer_imgs= archer_imgs1
         self.archer_count = 0
         self.zone = 200
         self.inZone = False
@@ -30,37 +30,24 @@ class ArcherTowerLong(Tower):
 
 
 
-
-
-
     def draw(self, win):
 
+        super().draw_zone(win)
         super().draw(win)
 
         if self.inZone:
             self.archer_count += 1
-            if self.archer_count >= len(self.archer_imgs) * 16:
+            if self.archer_count >= len(self.archer_imgs) * 7:
                 self.archer_count = 0
         else:
             self.archer_count=0
 
 
-        #draw zone
-        strefa= pygame.Surface((self.zone*4, self.zone*4), pygame.SRCALPHA, 32)
-        pygame.draw.circle(strefa, (128, 128, 189, 100), (self.zone, self.zone), self.zone, 0)
+        archer = self.archer_imgs[self.archer_count // 9]
 
-        win.blit(strefa, (self.x- self.zone +9, self.y- self.zone-70))
-        super().draw(win)
+        win.blit(archer, ((self.x + self.width / 2) - (archer.get_width() / 4.8),
+                          (self.y - archer.get_height() * 2.24)))                    # rysuje łuczników
 
-
-    def zone_of_attack(self, r):
-        """
-        :param r:
-        :return: None
-
-        zasięg ataku wieży
-        """
-        self.zone = r
 
 
     def attack(self, enemies):
@@ -84,7 +71,8 @@ class ArcherTowerLong(Tower):
             first_enemy= close_enemy[0]
             if time.time() - self.timer>= 0.5:
                 self.timer = time.time()
-                if first_enemy.hit() == True:
+
+                if first_enemy.hit(self.damage) == True:
                     enemies.remove(first_enemy)
 
             if first_enemy.x < self.x and self.right:
@@ -101,21 +89,21 @@ tower_imgs= []
 # wieża krótkodystansowa
 for x in range(1, 4):
     tower_imgs.append(
-        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/2", str(x) + ".png")),
-                               (150, 150)))
+        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/1", str(x) + ".png")),
+                               (170, 160)))
 # łucznik
 archer_imgs= []
-for x in range(1, 24):
+for x in range(2, 19):
     archer_imgs.append(
-        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archer/2", str(x) + ".png")),
+        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archer/1", str(x) + ".png")),
                                (100, 100)))
 
 
 class ArcherTowerShort(ArcherTowerLong):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs = tower_imgs1
-        self.archer_imgs = archer_imgs1
+        self.tower_imgs = tower_imgs
+        self.archer_imgs = archer_imgs
         self.archer_count = 0
         self.zone = 150
         self.inZone = False

@@ -35,10 +35,6 @@ class Enemy:
         win.blit(self.img, (self.x - self.img.get_width()/2, self.y- self.img.get_height()/2 - 30))
         self.draw_health_bar(win)
         self.move()
-
-       
-
-
         pass
 
     def draw_health_bar(self, win):
@@ -107,9 +103,10 @@ class Enemy:
 
         
 
-    def hit(self):
-        self.health -= 1
+    def hit(self, damage):
+        self.health -= damage
         if self.health <= 0:
             return True
 
         return False
+

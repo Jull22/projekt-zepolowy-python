@@ -19,9 +19,25 @@ class Tower:
         img = self.tower_imgs[self.level-1]
         win.blit(img, ((self.x + self.width) - (img.get_width())/3, (self.y - img.get_height())))
 
-        archer = self.archer_imgs[self.archer_count // 16]
-        win.blit(archer, ((self.x + self.width / 2) - (archer.get_width() / 3.5),
-                          (self.y - archer.get_height() * 2.2)))                    # rysuje łuczników
+
+
+    def draw_zone(self, win):
+        #draw zone
+        strefa= pygame.Surface((self.zone*4, self.zone*4), pygame.SRCALPHA, 32)
+        pygame.draw.circle(strefa, (128, 128, 189, 100), (self.zone, self.zone), self.zone, 0)
+
+        win.blit(strefa, (self.x- self.zone +20, self.y- self.zone-70))
+
+
+
+    def zone_of_attack(self, r):
+        """
+        :param r:
+        :return: None
+
+        zasięg ataku wieży
+        """
+        self.zone = r
 
     def click(self, X, Y):
         """wybranie wieży
