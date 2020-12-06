@@ -27,6 +27,7 @@ class ArcherTowerLong(Tower):
         self.right= True
         self.timer = time.time()
         self.damage = 1
+        self.original_zone= self.zone
 
 
 
