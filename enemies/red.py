@@ -1,6 +1,6 @@
 import pygame
 import os
-from .enemy import Enemy 
+from .enemy import Enemy
 
 
 
@@ -16,7 +16,7 @@ for x in range(20):
 
         imgs.append(pygame.transform.scale(pygame.image.load(os.path.join("game_assets/monsters/PNG/1", "1_enemies_1_run_0" + string + ".png")), (64,64)))
 
-class Scorpion(Enemy):
+class Red(Enemy):
     def __init__(self):
         super().__init__()
         self.max_health = 4

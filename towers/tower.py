@@ -13,20 +13,22 @@ class Tower:
         self.selected= False
         self.menu= None
         self.damage= 1
+        self.tower_imgs=[]
 
     def draw(self, win):
 
         img = self.tower_imgs[self.level-1]
-        win.blit(img, ((self.x + self.width) - (img.get_width())/3, (self.y - img.get_height())))
+        win.blit(img, (self.x - (img.get_width())/3, (self.y - img.get_height())))
 
 
 
     def draw_zone(self, win):
         #draw zone
-        strefa= pygame.Surface((self.zone*4, self.zone*4), pygame.SRCALPHA, 32)
-        pygame.draw.circle(strefa, (128, 128, 189, 100), (self.zone, self.zone), self.zone, 0)
+        if self.selected:
+            strefa= pygame.Surface((self.zone*4, self.zone*4), pygame.SRCALPHA, 32)
+            pygame.draw.circle(strefa, (128, 128, 189, 100), (self.zone, self.zone), self.zone, 0)
 
-        win.blit(strefa, (self.x- self.zone +20, self.y- self.zone-70))
+            win.blit(strefa, (self.x- self.zone +20, self.y- self.zone-70))
 
 
 
@@ -45,9 +47,9 @@ class Tower:
             param:Y:int
             return: Boolean"""
         
-
-        if X < self.x + self.width and X>= self.x:
-            if Y <= self.y + self.height and Y>= self.y:
+        img = self.tower_imgs[self.level-1]    #120x120x32
+        if X <= self.x- img.get_width() +95 + self.width and X>= self.x- img.get_width()+95 :
+            if Y  <= self.y - img.get_height() + 10 + self.height and Y>= self.y - img.get_height()-30:
                 return True
 
         return False

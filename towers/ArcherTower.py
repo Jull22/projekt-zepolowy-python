@@ -28,6 +28,9 @@ class ArcherTowerLong(Tower):
         self.timer = time.time()
         self.damage = 1
         self.original_zone= self.zone
+        self.original_damage= self.damage
+        self.width= self.height= 100
+
 
 
 
@@ -46,7 +49,7 @@ class ArcherTowerLong(Tower):
 
         archer = self.archer_imgs[self.archer_count // 9]
 
-        win.blit(archer, ((self.x + self.width / 2) - (archer.get_width() / 4.6),
+        win.blit(archer, (self.x - (archer.get_width() / 4.6),
                           (self.y - archer.get_height() * 1.9)))                    # rysuje łuczników
 
 
@@ -111,5 +114,8 @@ class ArcherTowerShort(ArcherTowerLong):
         self.right = True
         self.timer = time.time()
         self.damage = 1
+        self.original_zone = self.zone
+
+
 
 
