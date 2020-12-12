@@ -4,8 +4,8 @@ import os
 import math
 import time
 
-range_img= [pygame.transform.scale(pygame.image.load(os.path.join("game_assets/supportTower", "range_tower" + ".png")),(100, 130)),
-        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/supportTower", "range_tower2" + ".png")),(100, 130))]
+range_img= [pygame.transform.scale(pygame.image.load(os.path.join("game_assets/supportTower", "range_tower" + ".png")),(100, 120)),
+        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/supportTower", "range_tower2" + ".png")),(100, 120))]
 
 
 class RangeTower(Tower):
@@ -19,8 +19,9 @@ class RangeTower(Tower):
 
 
     def draw(self, win):
-        super().draw(win)
+
         super().draw_zone(win)
+        super().draw(win)
 
 
     def support(self, towers):
@@ -55,8 +56,9 @@ class DamageTower(RangeTower):
 
     def draw(self, win):
 
-        super().draw(win)
         super().draw_zone(win)
+        super().draw(win)
+
 
     def support(self, towers):
         """zwiększa atak wieży w zasięgu wieży damage """

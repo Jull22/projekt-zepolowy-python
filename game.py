@@ -58,7 +58,6 @@ class Game:
                         if tw.click(position[0], position[1]):
                             tw.selected = True
                             self.selected_tower = tw
-                            print("run")
                         else:
                             tw.selected = False
 
@@ -69,7 +68,6 @@ class Game:
                             self.selected_tower = tw
                             print(tw)
                             break
-                            print("run")
                         else:
                             tw.selected = False
 
