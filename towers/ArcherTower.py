@@ -1,8 +1,9 @@
 import pygame 
-from .tower import Tower
+from .tower import Tower, menu_bg, upgrade
 import os
 import math
 import time
+from menu import Menu
 
 tower_imgs1 = []
 archer_imgs1 = []
@@ -31,6 +32,9 @@ class ArcherTowerLong(Tower):
         self.original_damage= self.damage
         self.width= self.height= 100
 
+        self.menu= Menu(self, self.x, self.y, menu_bg, [2000,5000,"MAX"])
+        self.menu.add_btn(upgrade, "Upgrade")
+
 
 
 
@@ -57,7 +61,7 @@ class ArcherTowerLong(Tower):
     def attack(self, enemies):
         # atak wroga
 
-
+        money=0
         self.inZone = False
         close_enemy= []
         for enemy in enemies:
@@ -77,6 +81,7 @@ class ArcherTowerLong(Tower):
                 self.timer = time.time()
 
                 if first_enemy.hit(self.damage) == True:
+                    money= first_enemy.money
                     enemies.remove(first_enemy)
 
             if first_enemy.x < self.x and self.right:
@@ -88,6 +93,8 @@ class ArcherTowerLong(Tower):
                 self.right=True
                 for x, img in enumerate(self.archer_imgs):
                     self.archer_imgs[x]= pygame.transform.flip(img, True, False)
+
+        return money
 
 tower_imgs= []
 # wieża krótkodystansowa
@@ -115,6 +122,9 @@ class ArcherTowerShort(ArcherTowerLong):
         self.timer = time.time()
         self.damage = 1
         self.original_zone = self.zone
+
+        self.menu= Menu(self, self.x, self.y, menu_bg, [2500,5300,"MAX"])
+        self.menu.add_btn(upgrade, "Upgrade")
 
 
 

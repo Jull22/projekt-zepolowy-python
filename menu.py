@@ -58,6 +58,10 @@ class Menu:
         btn_y = self.y -167
         self.buttons.append(Button(btn_x, btn_y, img, name))
 
+    def get_item_cost(self):
+
+        return self.item_cost[self.tower.level -1]
+
     def draw(self, win):
         """
         narysuj przyciski i menu
@@ -67,12 +71,12 @@ class Menu:
         win.blit(self.bg, (self.x - self.bg.get_width()/2 + 25, self.y-170))
         for item in self.buttons:
             item.draw(win)
-            win.blit(star, (item.x + item.width * 1.5 + 5, item.y + 3))  #rysuje gwiazdke
-
-
+            win.blit(star, (item.x + item.width * 1.5 + 5, item.y + 3))                     #rysuje gwiazdke
             text = self.font.render(str(self.item_cost[self.tower.level-1]), 1, (255,255,255))
-            win.blit(text, (item.x + item.width + 25 , item.y + 24))
+            win.blit(text, (item.x + item.width + 25 , item.y + 24))                        #rysuje kwotę
 
+    def get_upgrade_cost(self):
+        return self.menu.get_item_cost()
 
 
 

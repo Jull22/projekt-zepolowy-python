@@ -4,6 +4,8 @@ import os
 
 menu_bg = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu.png")), (125, 50))
 upgrade = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "upgrade.png")), (45,45))
+star = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "star.png")), (25,25))
+
 
 
 class Tower:
@@ -17,7 +19,7 @@ class Tower:
         self.price = [0,0,0]
         self.level = 1
         self.selected= False
-        self.menu= Menu(self, self.x, self.y, menu_bg, [2000,5000,12000])
+        self.menu= Menu(self, self.x, self.y, menu_bg, [2000,"MAX"])
         self.menu.add_btn(upgrade, "Upgrade")
 
         self.damage= 1
@@ -69,8 +71,11 @@ class Tower:
 
     def upgrade(self):
         """ulepszenie wieży   """
-        self.level += 1
-        self.damage+= 1
+
+        if self.level <  len(self.tower_imgs):
+
+            self.level += 1
+            self.damage+= 1
         
     def get_upgrade_cost(self):
         """ cena za ulepszenie"""

@@ -18,6 +18,8 @@ for x in range(20):
 class Ghost(Enemy):
     def __init__(self):
         super().__init__()
+        self.name= "ghost"
+        self.money = 1
         self.max_health = 2
         self.health = self.max_health
         self.imgs = imgs[:]

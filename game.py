@@ -5,6 +5,7 @@ from enemies.ghost import Ghost
 from enemies.wiz import Wiz
 from towers.ArcherTower import ArcherTowerLong, ArcherTowerShort
 from towers.assistant_tower import RangeTower, DamageTower
+from menu import star
 
 import random
 import time
@@ -26,7 +27,7 @@ class Game:
         self.support_towers = [DamageTower(200, 300), RangeTower(800, 200)]
         self.attack_towers = [ArcherTowerLong(300, 300), ArcherTowerShort(900, 300)]
         self.lives = 10
-        self.money = 100
+        self.money = 10000
         self.bg = pygame.image.load(os.path.join("game_assets", "background.jpg"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
         # self.clicks=[]  #needed just to get PATH
@@ -59,7 +60,11 @@ class Game:
                     if self.selected_tower:
                         btn_clicked =  self.selected_tower.menu.get_clicked(position[0], position[1])
                         if btn_clicked:
-                            print(btn_clicked)
+                            if btn_clicked == "Upgrade":
+                                cost= self.selected_tower.get_upgrade_cost()
+                                if self.money >= cost:
+                                    self.money-= cost
+                                    self.selected_tower.upgrade()
                     if not(btn_clicked):
                         for tw in self.attack_towers:
                             if tw.click(position[0], position[1]):
@@ -80,8 +85,9 @@ class Game:
 
             to_delete = []
             for en in self.enemys:
-                if en.x < -50:
+                if en.x < -20:
                     to_delete.append(en)
+                    self.lives-=1
 
             # usuwa wrogów, którzy wyszli poza ekran
             for d in to_delete:
@@ -89,7 +95,7 @@ class Game:
 
             # przechodzi przez wieże i sprawdza czy wróg jest w strefie ataku
             for tow in self.attack_towers:
-                tow.attack(self.enemys)
+                self.money+= tow.attack(self.enemys)
 
             # sprawdza czy wieże atakujące się w strefie
             for t in self.support_towers:
@@ -130,9 +136,18 @@ class Game:
         self.win.blit(text, (start_x - text.get_width() - 1, 5))
         self.win.blit(life, (start_x, 25))
 
+        # narysuj gwiazdki jako waluta
+        text = self.health_font.render(str(self.money), 1, (0, 0, 0))
+
+        money = pygame.transform.scale(star, (50, 50))
+        start_x = self.width - life.get_width() - 10
+
+        self.win.blit(text, (start_x - text.get_width() - 1, 80))
+        self.win.blit(money, (start_x, 100))
+
         pygame.display.update()
 
-        def menu(self):
+        def draw_menu(self):
             pass
 
 
