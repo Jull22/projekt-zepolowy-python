@@ -23,7 +23,7 @@ class Game:
         self.height = 700
         self.win = pygame.display.set_mode((self.width, self.height))
         self.enemys = [Wiz()]
-        self.support_towers = [DamageTower(200, 300), RangeTower(900, 350)]
+        self.support_towers = [DamageTower(200, 300), RangeTower(800, 200)]
         self.attack_towers = [ArcherTowerLong(300, 300), ArcherTowerShort(900, 300)]
         self.lives = 10
         self.money = 100
@@ -54,22 +54,29 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     position = pygame.mouse.get_pos()
-                    for tw in self.attack_towers:
-                        if tw.click(position[0], position[1]):
-                            tw.selected = True
-                            self.selected_tower = tw
-                        else:
-                            tw.selected = False
 
-                    for tw in self.support_towers:
-                        tw.selected= False
-                        if tw.click(position[0], position[1]):
-                            tw.selected = True
-                            self.selected_tower = tw
-                            print(tw)
-                            break
-                        else:
-                            tw.selected = False
+                    btn_clicked= None
+                    if self.selected_tower:
+                        btn_clicked =  self.selected_tower.menu.get_clicked(position[0], position[1])
+                        if btn_clicked:
+                            print(btn_clicked)
+                    if not(btn_clicked):
+                        for tw in self.attack_towers:
+                            if tw.click(position[0], position[1]):
+                                tw.selected = True
+                                self.selected_tower = tw
+                            else:
+                                tw.selected = False
+
+                        for tw in self.support_towers:
+                            tw.selected= False
+                            if tw.click(position[0], position[1]):
+                                tw.selected = True
+                                self.selected_tower = tw
+                                print(tw)
+                                break
+                            else:
+                                tw.selected = False
 
             to_delete = []
             for en in self.enemys:
