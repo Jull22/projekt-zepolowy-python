@@ -31,6 +31,8 @@ class ArcherTowerLong(Tower):
         self.original_zone= self.zone
         self.original_damage= self.damage
         self.width= self.height= 100
+        self.moving= False
+        self.name="archer"
 
         self.menu= Menu(self, self.x, self.y, menu_bg, [2000,5000,"MAX"])
         self.menu.add_btn(upgrade, "Upgrade")
@@ -43,7 +45,7 @@ class ArcherTowerLong(Tower):
         super().draw_zone(win)
         super().draw(win)
 
-        if self.inZone:
+        if self.inZone and not(self.moving):
             self.archer_count += 1
             if self.archer_count >= len(self.archer_imgs) * 7:
                 self.archer_count = 0
@@ -124,6 +126,7 @@ class ArcherTowerShort(ArcherTowerLong):
         self.timer = time.time()
         self.damage = 1
         self.original_zone = self.zone
+        self.name = "archer2"
 
         self.menu= Menu(self, self.x, self.y, menu_bg, [2500,5300,"MAX"])
         self.menu.add_btn(upgrade, "Upgrade")

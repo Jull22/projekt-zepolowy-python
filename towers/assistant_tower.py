@@ -16,6 +16,7 @@ class RangeTower(Tower):
         self.effect=[0.2, 0.4]
         self.width= 100
         self.height= 130
+        self.name = "range"
 
 
     def draw(self, win):
@@ -52,6 +53,7 @@ class DamageTower(RangeTower):
         self.zone = 150
         self.tower_imgs= damage_imgs[:]
         self.effect= [0.2, 0.4]
+        self.name = "damage"
 
 
     def draw(self, win):

@@ -6,7 +6,7 @@ from enemies.wiz import Wiz
 from towers.archer_tower import ArcherTowerLong, ArcherTowerShort
 from towers.assistant_tower import RangeTower, DamageTower
 from menu import star
-from menu import Menu, VerticalMenu
+from menu import VerticalMenu
 
 import random
 import time
@@ -21,6 +21,8 @@ menu_side_icon2= pygame.transform.scale(pygame.image.load(os.path.join("game_ass
 menu_side_icon3= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon3.png")), (70, 70))
 menu_side_icon4= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon4.png")), (70, 70))
 
+attack_tower_names = ["archer", "archer2"]
+assistant_tower_names = ["range", "damage"]
 # star_img = pygame.image.load(os.path.join("game_assets", "star.png"))
 
 
@@ -33,13 +35,14 @@ class Game:
         self.support_towers = [DamageTower(200, 300), RangeTower(850, 200)]
         self.attack_towers = [ArcherTowerLong(300, 300), ArcherTowerShort(900, 300)]
         self.lives = 10
-        self.money = 10000
+        self.money = 2500
         self.bg = pygame.image.load(os.path.join("game_assets", "background.jpg"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
         # self.clicks=[]  #needed just to get PATH
         self.timer = time.time()
-        self.health_font = pygame.font.SysFont("sourcesanspro", 70, bold=200)
+        self.health_font = pygame.font.SysFont("sourcesanspro", 40, bold=200)
         self.selected_tower = None
+        self.moving_object= None
 
         self.menu= VerticalMenu(self.width- menu_side.get_width() + 20, 350, menu_side)
         self.menu.add_btn(menu_side_icon1, "buy_damage", 1500)
@@ -53,12 +56,18 @@ class Game:
         clock = pygame.time.Clock()
 
         while run:
+            # pygame.time.delay(0)
+            clock.tick(80)
+
             if time.time() - self.timer >= 0.5:  # co ile sekund ma wychodzić nowy wróg
                 self.timer = time.time()
                 self.enemys.append(random.choice([Ghost(), Red(), Wiz()]))
 
-            # pygame.time.delay(0)
-            clock.tick(80)
+            position = pygame.mouse.get_pos()
+            if self.moving_object:
+                self.moving_object.move(position[0],position[1])
+
+           #główna pętla
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.display.quit()
@@ -67,34 +76,50 @@ class Game:
                 # pos= pygame.mouse.get_pos()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    position = pygame.mouse.get_pos()
+                    if self.moving_object:
 
-                    btn_clicked= None
-                    if self.selected_tower:
-                        btn_clicked =  self.selected_tower.menu.get_clicked(position[0], position[1])
-                        if btn_clicked:
-                            if btn_clicked == "Upgrade":
-                                cost= self.selected_tower.get_upgrade_cost()
-                                if self.money >= cost:
-                                    self.money-= cost
-                                    self.selected_tower.upgrade()
-                    if not(btn_clicked):
-                        for tw in self.attack_towers:
-                            if tw.click(position[0], position[1]):
-                                tw.selected = True
-                                self.selected_tower = tw
-                            else:
-                                tw.selected = False
+                        if self.moving_object.name in attack_tower_names:
+                            self.attack_towers.append(self.moving_object)
+                        elif self.moving_object.name in assistant_tower_names:
+                            self.support_towers.append(self.moving_object)
 
-                        for tw in self.support_towers:
-                            tw.selected= False
-                            if tw.click(position[0], position[1]):
-                                tw.selected = True
-                                self.selected_tower = tw
-                                print(tw)
-                                break
-                            else:
-                                tw.selected = False
+                        self.moving_object.moving = False
+                        self.moving_object = None
+
+
+                    else:
+                        #sprawdza czy wybieramy opcję z menu bocznego
+
+                        side_menu_button= self.menu.get_clicked(position[0],position[1])
+                        if side_menu_button:
+                            self.add_tower(side_menu_button)
+
+
+                        #sprawdza czy wieża jest wybrana
+                        btn_clicked= None
+                        if self.selected_tower:
+                            btn_clicked =  self.selected_tower.menu.get_clicked(position[0], position[1])
+                            if btn_clicked:
+                                if btn_clicked == "Upgrade":
+                                    cost= self.selected_tower.get_upgrade_cost()
+                                    if self.money >= cost:
+                                        self.money-= cost
+                                        self.selected_tower.upgrade()
+                        if not(btn_clicked):
+                            for tw in self.attack_towers:
+                                if tw.click(position[0], position[1]):
+                                    tw.selected = True
+                                    self.selected_tower = tw
+                                else:
+                                    tw.selected = False
+
+                            for tw in self.support_towers:
+                                tw.selected= False
+                                if tw.click(position[0], position[1]):
+                                    tw.selected = True
+                                    self.selected_tower = tw
+                                else:
+                                    tw.selected = False
 
             to_delete = []
             for en in self.enemys:
@@ -121,6 +146,8 @@ class Game:
 
             self.draw()
 
+
+
         pygame.quit()
 
     def draw(self):
@@ -131,6 +158,9 @@ class Game:
         # narysuj wroga
         for enemy in self.enemys:
             enemy.draw(self.win)
+
+        if self.moving_object:
+            self.moving_object.draw(self.win)
 
         # narysuj wieże i łuczników
         for tow in self.attack_towers:
@@ -146,7 +176,7 @@ class Game:
         life = pygame.transform.scale(health_img, (50, 50))
         start_x = self.width - life.get_width() - 10
 
-        self.win.blit(text, (start_x - text.get_width() - 1, 5))
+        self.win.blit(text, (start_x - text.get_width() - 1, 30))
         self.win.blit(life, (start_x, 25))
 
         # narysuj gwiazdki jako waluta
@@ -155,15 +185,25 @@ class Game:
         money = pygame.transform.scale(star, (50, 50))
         start_x = self.width - life.get_width() - 10
 
-        self.win.blit(text, (start_x - text.get_width() - 1, 80))
+        self.win.blit(text, (start_x - text.get_width() - 1, 100))
         self.win.blit(money, (start_x, 100))
 
         self.menu.draw(self.win)
 
         pygame.display.update()
 
-        def draw_menu(self):
-            pass
+    def add_tower(self, name):
+        x, y=pygame.mouse.get_pos()
+        name_list=["buy_damage", "buy_range", "buy_archer", "buy_archer2"]
+        object_list = [DamageTower(x,y), RangeTower(x,y), ArcherTowerLong(x,y), ArcherTowerShort(x,y) ]
+
+        try:
+            obj=object_list[name_list.index(name)]
+            self.moving_object = obj
+            obj.moving = True
+        except Exception as exc:
+            print(str(exc) + "wrong name")
+
 
 
 g = Game()
