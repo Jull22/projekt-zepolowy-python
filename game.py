@@ -3,9 +3,10 @@ import os
 from enemies.red import Red
 from enemies.ghost import Ghost
 from enemies.wiz import Wiz
-from towers.ArcherTower import ArcherTowerLong, ArcherTowerShort
+from towers.archer_tower import ArcherTowerLong, ArcherTowerShort
 from towers.assistant_tower import RangeTower, DamageTower
 from menu import star
+from menu import Menu, VerticalMenu
 
 import random
 import time
@@ -13,7 +14,12 @@ import time
 pygame.font.init()
 
 health_img = pygame.image.load(os.path.join("game_assets", "heart.png"))
+menu_side= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-side.png")), (90, 480))
 
+menu_side_icon1= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon.png")), (70, 70))
+menu_side_icon2= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon2.png")), (70, 70))
+menu_side_icon3= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon3.png")), (70, 70))
+menu_side_icon4= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon4.png")), (70, 70))
 
 # star_img = pygame.image.load(os.path.join("game_assets", "star.png"))
 
@@ -23,8 +29,8 @@ class Game:
         self.width = 1200
         self.height = 700
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.enemys = [Wiz()]
-        self.support_towers = [DamageTower(200, 300), RangeTower(800, 200)]
+        self.enemys = []
+        self.support_towers = [DamageTower(200, 300), RangeTower(850, 200)]
         self.attack_towers = [ArcherTowerLong(300, 300), ArcherTowerShort(900, 300)]
         self.lives = 10
         self.money = 10000
@@ -34,6 +40,13 @@ class Game:
         self.timer = time.time()
         self.health_font = pygame.font.SysFont("sourcesanspro", 70, bold=200)
         self.selected_tower = None
+
+        self.menu= VerticalMenu(self.width- menu_side.get_width() + 20, 350, menu_side)
+        self.menu.add_btn(menu_side_icon1, "buy_damage", 1500)
+        self.menu.add_btn(menu_side_icon2, "buy_range", 1000)
+        self.menu.add_btn(menu_side_icon3, "buy_archer", 500)
+        self.menu.add_btn(menu_side_icon4, "buy_archer2", 700)
+
 
     def run(self):
         run = True
@@ -144,6 +157,8 @@ class Game:
 
         self.win.blit(text, (start_x - text.get_width() - 1, 80))
         self.win.blit(money, (start_x, 100))
+
+        self.menu.draw(self.win)
 
         pygame.display.update()
 

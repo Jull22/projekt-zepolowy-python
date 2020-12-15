@@ -68,8 +68,8 @@ class ArcherTowerLong(Tower):
 
             x, y = enemy.x, enemy.y
             distance = math.sqrt((self.x-x)**2 + (self.y - y)**2)
-            if distance < self.zone:
-                self.inZone = True
+            if distance < self.zone:   #sprawdza czy dystans między wrogiem a wieżą jest mniejszy niż jej zasięg
+                self.inZone = True      #jeśli True to wyznacza najbliższego wroga
                 close_enemy.append(enemy)
 
 
@@ -80,16 +80,18 @@ class ArcherTowerLong(Tower):
             if time.time() - self.timer>= 0.5:
                 self.timer = time.time()
 
-                if first_enemy.hit(self.damage) == True:
+                if first_enemy.hit(self.damage) == True:  #jeśli istnieje najbliższy w stresie ataku i zostanie pokonany to usuwamy go i zwracamy money
                     money= first_enemy.money
                     enemies.remove(first_enemy)
 
-            if first_enemy.x < self.x and self.right:
+            #obracanie animacji łucznika
+            if first_enemy.x < self.x and self.right:  #jeśli najblizszy wróg jest z lewej strony
 
                 self.right=False
+                #łucznik obraca się w lewo
                 for x, img in enumerate(self.archer_imgs):
                     self.archer_imgs[x] = pygame.transform.flip(img, True, False)
-            elif not(self.right) and first_enemy.x > self.x :
+            elif not(self.right) and first_enemy.x > self.x :      #jeśli najblizszy wróg jest z prawej strony, obrót w prawo
                 self.right=True
                 for x, img in enumerate(self.archer_imgs):
                     self.archer_imgs[x]= pygame.transform.flip(img, True, False)

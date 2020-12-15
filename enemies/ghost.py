@@ -20,7 +20,7 @@ class Ghost(Enemy):
         super().__init__()
         self.name= "ghost"
         self.money = 1
-        self.max_health = 2
+        self.max_health = 3
         self.health = self.max_health
         self.imgs = imgs[:]
 

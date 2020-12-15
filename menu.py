@@ -17,9 +17,9 @@ class Button:
     def click(self, X, Y):
         """
         Sprawdza czy pozycja obiektow koliduje z menu
-        :param X:
-        :param Y:
-        :return:
+        :param X: int
+        :param Y: int
+        :return: bool
         """
         if X <= self.x + self.width and X>= self.x:
             if Y <= self.y + self.height and Y >= self.y:
@@ -59,6 +59,10 @@ class Menu:
         self.buttons.append(Button(btn_x, btn_y, img, name))
 
     def get_item_cost(self):
+        """
+        cena za ulepszenie wieży
+        :return:
+        """
 
         return self.item_cost[self.tower.level -1]
 
@@ -87,3 +91,67 @@ class Menu:
 
 
         return None
+
+class VerticalButton(Button):
+    def __init__(self, x, y, img, name, cost):
+        super().__init__(x, y, img, name)
+        self.cost= cost
+
+
+
+    def click(self, X, Y):
+        """
+        Sprawdza czy pozycja obiektow koliduje z menu
+        :param X: int
+        :param Y: int
+        :return: bool
+        """
+        if X <= self.x + self.width and X>= self.x:
+            if Y <= self.y + self.height and Y >= self.y:
+                return True
+        return False
+
+
+    def draw(self, win):
+        win.blit(self.img, (self.x, self.y))
+
+
+class VerticalMenu(Menu):
+    def __init__(self, x, y, img):
+        self.x = x
+        self.y = y
+        self.width = img.get_width()
+        self.height = img.get_height()
+        self.items = 0
+        self.buttons = []
+        self.bg = img
+        self.font = pygame.font.SysFont("sourcesanspro", 17, bold=200)
+
+
+    def add_btn(self, img, name, cost):
+        """
+        dodawanie przycisków do menu
+        :param img: surface
+        :param name: string
+        :return: None
+        """
+        self.items += 1
+        btn_x = self.x - 9
+        btn_y = self.y + (self.items-1) * 110 - 153
+        self.buttons.append(VerticalButton(btn_x, btn_y, img, name, cost))
+
+    def get_item_cost(self):
+        return Exception("Nie potrzebne")
+
+    def draw(self, win):
+        """
+        narysuj przyciski i menu
+        :param win: surface
+        :return: None
+        """
+        win.blit(self.bg, (self.x - self.bg.get_width()/2 + 25, self.y-170))
+        for item in self.buttons:
+            item.draw(win)
+            win.blit(star, (item.x  , item.y + 60))                     #rysuje gwiazdke
+            text = self.font.render(str(item.cost), 1, (255,255,255))
+            win.blit(text, (item.x + 24 , item.y + 68))                        #rysuje kwotę
