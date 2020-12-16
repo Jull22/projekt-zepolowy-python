@@ -82,7 +82,11 @@ class Tower:
         return self.price[self.level-1]
 
     def move(self, x, y):
+        #przenosi wieżę na daną pozycję x i y
         self.x = x
         self.y = y
+        self.menu.x= x
+        self.menu.y= y
+        self.menu.update()
 
 

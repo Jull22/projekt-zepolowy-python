@@ -4,10 +4,11 @@ import os
 star = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "star.png")), (25,25))
 
 class Button:
-    def __init__(self, x, y, img, name):
-        self.x = x
-        self.y = y
+    def __init__(self, menu, img, name):
+        self.x = menu.x - 30
+        self.y = menu.y - 168
         self.img = img
+        self.menu= menu
         self.width = self.img.get_width()
         self.height = self.img.get_height()
         self.name = name
@@ -29,6 +30,10 @@ class Button:
 
     def draw(self, win):
         win.blit(self.img, (self.x, self.y))
+
+    def update(self):
+        self.x = self.menu.x - 30
+        self.y = self.menu.y - 168
 
 class Menu:
 
@@ -53,10 +58,9 @@ class Menu:
         :return: None
         """
         self.items += 1
-        inc_x = self.width/self.x
         btn_x = self.x - self.bg.get_width()/2 + 35
         btn_y = self.y -167
-        self.buttons.append(Button(btn_x, btn_y, img, name))
+        self.buttons.append(Button(self, img, name))
 
     def get_item_cost(self):
         """
@@ -79,7 +83,7 @@ class Menu:
             text = self.font.render(str(self.item_cost[self.tower.level-1]), 1, (255,255,255))
             win.blit(text, (item.x + item.width + 25 , item.y + 24))                        #rysuje kwotę
 
-    def get_upgrade_cost(self):
+    def get_upgrade_cost(self, name):
         return self.menu.get_item_cost()
 
 
@@ -92,9 +96,21 @@ class Menu:
 
         return None
 
+    def update(self):
+        for btn in self.buttons:
+            btn.update()
+
+
+
 class VerticalButton(Button):
     def __init__(self, x, y, img, name, cost):
-        super().__init__(x, y, img, name)
+        self.x = x
+        self.y = y
+        self.img = img
+
+        self.width = self.img.get_width()
+        self.height = self.img.get_height()
+        self.name = name
         self.cost= cost
 
 
@@ -140,8 +156,13 @@ class VerticalMenu(Menu):
         btn_y = self.y + (self.items-1) * 110 - 153
         self.buttons.append(VerticalButton(btn_x, btn_y, img, name, cost))
 
-    def get_item_cost(self):
-        return Exception("Nie potrzebne")
+    def get_item_cost(self, name):
+        #koszt wieży
+        for btn in self.buttons:
+            if btn.name == name:
+                return btn.cost
+
+        return -1
 
     def draw(self, win):
         """

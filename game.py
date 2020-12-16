@@ -65,7 +65,7 @@ class Game:
 
             position = pygame.mouse.get_pos()
             if self.moving_object:
-                self.moving_object.move(position[0],position[1])
+                self.moving_object.move(position[0]-20,position[1]+50)
 
            #główna pętla
             for event in pygame.event.get():
@@ -92,7 +92,10 @@ class Game:
 
                         side_menu_button= self.menu.get_clicked(position[0],position[1])
                         if side_menu_button:
-                            self.add_tower(side_menu_button)
+                            cost=self.menu.get_item_cost(side_menu_button)
+                            if self.money >= cost:
+                                self.money-= cost
+                                self.add_tower(side_menu_button)
 
 
                         #sprawdza czy wieża jest wybrana
@@ -188,13 +191,14 @@ class Game:
         self.win.blit(text, (start_x - text.get_width() - 1, 100))
         self.win.blit(money, (start_x, 100))
 
+        #narysuj menu boczne
         self.menu.draw(self.win)
 
         pygame.display.update()
 
     def add_tower(self, name):
         x, y=pygame.mouse.get_pos()
-        name_list=["buy_damage", "buy_range", "buy_archer", "buy_archer2"]
+        name_list=["buy_damage", "buy_range", "buy_archer2", "buy_archer"]
         object_list = [DamageTower(x,y), RangeTower(x,y), ArcherTowerLong(x,y), ArcherTowerShort(x,y) ]
 
         try:
