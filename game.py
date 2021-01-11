@@ -6,7 +6,7 @@ from enemies.wiz import Wiz
 from towers.archer_tower import ArcherTowerLong, ArcherTowerShort
 from towers.assistant_tower import RangeTower, DamageTower
 from menu import star
-from menu import VerticalMenu
+from menu import VerticalMenu, PausePlayButton
 
 import random
 import time
@@ -21,8 +21,8 @@ menu_side_icon2= pygame.transform.scale(pygame.image.load(os.path.join("game_ass
 menu_side_icon3= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon3.png")), (70, 70))
 menu_side_icon4= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon4.png")), (70, 70))
 
-start_btn= pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "start.png")), (70, 70))
-pause_btn=pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "pause.png")), (70, 70))
+start_btn= pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "start.png")), (110, 45))
+pause_btn=pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "pause.png")), (110, 45))
 
 play_btn = pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "play.png")), (70, 70))
 
@@ -54,7 +54,8 @@ class Game:
         self.moving_object= None
         self.wave= 0
         self.current_wave= waves[self.wave][:]
-        self.pause= False
+        self.pause= True
+        self.pausePlayBtn = PausePlayButton(start_btn, pause_btn, self.width-300,  self.height-50)
 
         self.menu= VerticalMenu(self.width- menu_side.get_width() + 20, 350, menu_side)
         self.menu.add_btn(menu_side_icon1, "buy_damage", 1500)
@@ -119,6 +120,12 @@ class Game:
 
 
                     else:
+                        #sprawdza czy gra jest w stanie start/pause
+                        if (self.pausePlayBtn.click(position[0], position[1])):
+                            self.pause = not(self.pause)
+                            self.pausePlayBtn.paused=self.pause  #zmiana obrazka na start lub pause
+
+
                         #sprawdza czy wybieramy opcję z menu bocznego
 
                         side_menu_button= self.menu.get_clicked(position[0],position[1])
@@ -167,28 +174,30 @@ class Game:
                                 else:
                                     tow.selected = False
 
-            to_delete = []
-            for en in self.enemys:
-                if en.x < -20:
-                    to_delete.append(en)
-                    self.lives-=1
+            if self.pause==False:
+                to_delete = []
+                for en in self.enemys:
+                    en.move()
+                    if en.x < -20:
+                        to_delete.append(en)
+                        self.lives-=1
 
-            # usuwa wrogów, którzy wyszli poza ekran
-            for d in to_delete:
-                self.enemys.remove(d)
+                # usuwa wrogów, którzy wyszli poza ekran
+                for d in to_delete:
+                    self.enemys.remove(d)
 
-            # przechodzi przez wieże i sprawdza czy wróg jest w strefie ataku
-            for tow in self.attack_towers:
-                self.money+= tow.attack(self.enemys)
+                # przechodzi przez wieże i sprawdza czy wróg jest w strefie ataku
+                for tow in self.attack_towers:
+                    self.money+= tow.attack(self.enemys)
 
-            # sprawdza czy wieże atakujące się w strefie
-            for t in self.support_towers:
-                t.support(self.attack_towers)
+                # sprawdza czy wieże atakujące się w strefie
+                for t in self.support_towers:
+                    t.support(self.attack_towers)
 
-            # przegrana
-            if self.lives <= 0:
-                print("Porażka")
-                run = False
+                # przegrana
+                if self.lives <= 0:
+                    print("Porażka")
+                    run = False
 
             self.draw()
 
@@ -197,6 +206,7 @@ class Game:
         pygame.quit()
 
     def draw(self):
+
         self.win.blit(self.bg, (0, 0))
         # for click in self.clicks:
         #     pygame.draw.circle(self.win, (255,0,0), (click[0], click[1]), 3, 1)
@@ -236,6 +246,9 @@ class Game:
 
         #narysuj menu boczne
         self.menu.draw(self.win)
+
+        #narysuj przyciski start/pause
+        self.pausePlayBtn.draw(self.win)
 
         pygame.display.update()
 

@@ -34,8 +34,6 @@ class Enemy:
 
         win.blit(self.img, (self.x - self.img.get_width()/2, self.y- self.img.get_height()/2 - 30))
         self.draw_health_bar(win)
-        self.move()
-        pass
 
     def draw_health_bar(self, win):
         length=50
