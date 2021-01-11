@@ -1,4 +1,4 @@
-import pygame
+import pygame, sys
 import os
 from enemies.red import Red
 from enemies.ghost import Ghost
@@ -8,12 +8,14 @@ from towers.assistant_tower import RangeTower, DamageTower
 from menu import star
 from menu import VerticalMenu, PausePlayButton
 
-import random
 import time
 
 pygame.font.init()
 
 health_img = pygame.image.load(os.path.join("game_assets", "heart.png"))
+health_bg= pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "wave_btn.png")), (180, 70))
+money_bg= pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "wave_btn.png")), (250, 70))
+
 menu_side= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-side.png")), (90, 480))
 
 menu_side_icon1= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon.png")), (70, 70))
@@ -23,6 +25,7 @@ menu_side_icon4= pygame.transform.scale(pygame.image.load(os.path.join("game_ass
 
 start_btn= pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "start.png")), (110, 45))
 pause_btn=pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "pause.png")), (110, 45))
+wave_btn= pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "wave_btn.png")), (180, 62))
 
 play_btn = pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "play.png")), (70, 70))
 
@@ -41,10 +44,10 @@ class Game:
         self.height = 700
         self.win = pygame.display.set_mode((self.width, self.height))
         self.enemys = []
-        self.support_towers = [DamageTower(200, 300), RangeTower(850, 200)]
-        self.attack_towers = [ArcherTowerLong(300, 300), ArcherTowerShort(900, 300)]
+        self.support_towers = []
+        self.attack_towers = []
         self.lives = 10
-        self.money = 2500
+        self.money = 25000
         self.bg = pygame.image.load(os.path.join("game_assets", "background.jpg"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
         # self.clicks=[]  #needed just to get PATH
@@ -69,10 +72,12 @@ class Game:
         generuje wrogów dla odpowiednich poziomów trudności
         :return:enemy
         """
-        if sum(self.current_wave) == 0 :
-            self.wave+= 1
-            self.current_wave= waves[self.wave]
-            self.pause = True
+        if sum(self.current_wave) == 0:
+            if len(self.enemys) == 0 :
+                self.wave+= 1
+                self.current_wave= waves[self.wave]
+                self.pause = True
+                self.pausePlayBtn.paused= self.pause
         else:
             enemies_names = [Ghost(), Red(), Wiz()]
 
@@ -102,8 +107,13 @@ class Game:
            #główna pętla
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.display.quit()
+
+                    pygame.quit()
+
                     run = False
+                    sys.exit()
+
+
 
                 # pos= pygame.mouse.get_pos()
 
@@ -202,8 +212,9 @@ class Game:
             self.draw()
 
 
-
         pygame.quit()
+
+
 
     def draw(self):
 
@@ -229,19 +240,22 @@ class Game:
         # narysuj serca- życia
         text = self.health_font.render(str(self.lives), 1, (0, 0, 0))
 
-        life = pygame.transform.scale(health_img, (50, 50))
+        life = pygame.transform.scale(health_img, (40, 35))
         start_x = self.width - life.get_width() - 10
 
-        self.win.blit(text, (start_x - text.get_width() - 1, 30))
-        self.win.blit(life, (start_x, 25))
+        self.win.blit(health_bg, (start_x-100, 20))
+
+        self.win.blit(text, (start_x - text.get_width() - 4, 30))
+        self.win.blit(life, (start_x, 37))
 
         # narysuj gwiazdki jako waluta
         text = self.health_font.render(str(self.money), 1, (0, 0, 0))
 
         money = pygame.transform.scale(star, (50, 50))
-        start_x = self.width - life.get_width() - 10
+        # start_x = self.width - life.get_width() - 10
 
-        self.win.blit(text, (start_x - text.get_width() - 1, 100))
+        self.win.blit(money_bg, (start_x-150, 90))
+        self.win.blit(text, (start_x - text.get_width() - 2, 100))
         self.win.blit(money, (start_x, 100))
 
         #narysuj menu boczne
@@ -249,6 +263,11 @@ class Game:
 
         #narysuj przyciski start/pause
         self.pausePlayBtn.draw(self.win)
+
+        #narysuj level
+        self.win.blit(wave_btn, (18,10))
+        text= self.health_font.render("Level: " + str(self.wave), 1, (0, 0, 0))
+        self.win.blit(text, (22 + wave_btn.get_width()/2 - text.get_width()/2, 15))
 
         pygame.display.update()
 

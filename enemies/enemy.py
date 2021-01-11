@@ -27,7 +27,7 @@ class Enemy:
         #rysuje enemy - obrazek
 
         self.img= self.imgs[self.animation_count//3]
-        self.animation_count +=1
+
         if self.animation_count >= len(self.imgs):
             self.animation_count = 0 
 
@@ -57,6 +57,7 @@ class Enemy:
 
     def move(self):
         #ruch wroga
+        self.animation_count += 1
         x1,y1= self.path[self.path_pos]
         if self.path_pos + 1 >= len(self.path):  #jeśli jesteśmy na końcu iteracji przez ścieżkę
             x2, y2= (-50, 610)   #wróg ma wyjść poza widziany obszar jeśli jest już na końcu ścieżki
