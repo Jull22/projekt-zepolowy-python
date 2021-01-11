@@ -18,6 +18,12 @@ class RangeTower(Tower):
         self.height= 130
         self.name = "range"
 
+    def get_upgrade_cost(self):
+        """
+        get upgrade cost
+        :return:
+        """
+        return self.menu.get_item_cost()
 
     def draw(self, win):
 
@@ -78,3 +84,9 @@ class DamageTower(RangeTower):
             tower.damage = tower.original_damage + self.effect[self.level - 1]
 
 
+    def get_upgrade_cost(self):
+        """
+        get upgrade cost
+        :return:
+        """
+        return self.menu.get_item_cost()

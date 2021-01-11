@@ -100,7 +100,21 @@ class Menu:
         for btn in self.buttons:
             btn.update()
 
+class PausePlayButton(Button):
+    def __init__(self, start_btn, pause_btn, x, y):
+        self.x = x
+        self.y = y
+        self.img = start_btn
+        self.width = self.img.get_width()
+        self.height = self.img.get_height()
+        self.pause = pause_btn
+        self.start= start_btn
 
+    def start_pause_img(self):
+        if self.img == self.start:
+            self.img == self.pause
+        else:
+            self.img == self.start
 
 class VerticalButton(Button):
     def __init__(self, x, y, img, name, cost):

@@ -21,10 +21,19 @@ menu_side_icon2= pygame.transform.scale(pygame.image.load(os.path.join("game_ass
 menu_side_icon3= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon3.png")), (70, 70))
 menu_side_icon4= pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu-icon4.png")), (70, 70))
 
+start_btn= pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "start.png")), (70, 70))
+pause_btn=pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "pause.png")), (70, 70))
+
+play_btn = pygame.transform.scale(pygame.image.load(os.path.join("game_assets/buttons", "play.png")), (70, 70))
+
 attack_tower_names = ["archer", "archer2"]
 assistant_tower_names = ["range", "damage"]
 # star_img = pygame.image.load(os.path.join("game_assets", "star.png"))
 
+
+#fale wrogów
+#(ghost, red, wizard)
+waves= [[20,0,0],[40,0,0],[60,0,0],[0,20,0],[0,40,0],[0,60,0],[20,40,0],[20,30,20],[30,50,60],[40,60,80],[100,60,50]]
 
 class Game:
     def __init__(self):
@@ -43,12 +52,34 @@ class Game:
         self.health_font = pygame.font.SysFont("sourcesanspro", 40, bold=200)
         self.selected_tower = None
         self.moving_object= None
+        self.wave= 0
+        self.current_wave= waves[self.wave][:]
+        self.pause= False
 
         self.menu= VerticalMenu(self.width- menu_side.get_width() + 20, 350, menu_side)
         self.menu.add_btn(menu_side_icon1, "buy_damage", 1500)
         self.menu.add_btn(menu_side_icon2, "buy_range", 1000)
         self.menu.add_btn(menu_side_icon3, "buy_archer", 500)
         self.menu.add_btn(menu_side_icon4, "buy_archer2", 700)
+
+
+    def gen_enemies(self):
+        """
+        generuje wrogów dla odpowiednich poziomów trudności
+        :return:enemy
+        """
+        if sum(self.current_wave) == 0 :
+            self.wave+= 1
+            self.current_wave= waves[self.wave]
+            self.pause = True
+        else:
+            enemies_names = [Ghost(), Red(), Wiz()]
+
+            for x in range(len(self.current_wave)):
+                if self.current_wave[x] !=0:
+                    self.enemys.append(enemies_names[x])
+                    self.current_wave[x] = self.current_wave[x] - 1
+                    break
 
 
     def run(self):
@@ -58,10 +89,10 @@ class Game:
         while run:
             # pygame.time.delay(0)
             clock.tick(80)
-
-            if time.time() - self.timer >= 0.5:  # co ile sekund ma wychodzić nowy wróg
-                self.timer = time.time()
-                self.enemys.append(random.choice([Ghost(), Red(), Wiz()]))
+            if self.pause==False :
+                if time.time() - self.timer >= 0.5:  # co ile sekund ma wychodzić nowy wróg
+                    self.timer = time.time()
+                    self.gen_enemies()
 
             position = pygame.mouse.get_pos()
             if self.moving_object:
@@ -108,21 +139,33 @@ class Game:
                                     if self.money >= cost:
                                         self.money-= cost
                                         self.selected_tower.upgrade()
+
                         if not(btn_clicked):
                             for tw in self.attack_towers:
                                 if tw.click(position[0], position[1]):
                                     tw.selected = True
                                     self.selected_tower = tw
+                                    if btn_clicked == "Upgrade":
+                                        cost = self.selected_tower.get_upgrade_cost()
+                                        if self.money >= cost:
+                                            self.money -= cost
+                                            self.selected_tower.upgrade()
                                 else:
                                     tw.selected = False
 
-                            for tw in self.support_towers:
-                                tw.selected= False
-                                if tw.click(position[0], position[1]):
-                                    tw.selected = True
-                                    self.selected_tower = tw
+                            for tow in self.support_towers:
+                                tow.selected= False
+                                if tow.click(position[0], position[1]):
+                                    tow.selected = True
+                                    self.selected_tower = tow
+                                    if btn_clicked == "Upgrade":
+                                        cost = self.selected_tower.get_upgrade_cost()
+                                        if self.money >= cost:
+                                            self.money -= cost
+                                            self.selected_tower.upgrade()
+
                                 else:
-                                    tw.selected = False
+                                    tow.selected = False
 
             to_delete = []
             for en in self.enemys:

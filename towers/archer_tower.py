@@ -100,6 +100,13 @@ class ArcherTowerLong(Tower):
 
         return money
 
+    def get_upgrade_cost(self):
+        """
+        get upgrade cost
+        :return:
+        """
+        return self.menu.get_item_cost()
+
 tower_imgs= []
 # wieża krótkodystansowa
 for x in range(1, 4):

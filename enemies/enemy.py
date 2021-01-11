@@ -42,8 +42,10 @@ class Enemy:
         moveBy= round(length / self.max_health)
         health_bar = moveBy * self.health
 
-        pygame.draw.rect(win, (255,0, 0), (self.x-30, self.y-75, length, 10), 0)
-        pygame.draw.rect(win, (0,255, 0), (self.x-30, self.y-75, health_bar, 10), 0)
+        pygame.draw.rect(win, (0,0,0), (self.x-32, self.y-76, length+3,12), 0, border_radius=20)
+
+        pygame.draw.rect(win, (200,0, 0), (self.x-30, self.y-75, length, 10), 0, border_radius=20)
+        pygame.draw.rect(win, (0,150, 0), (self.x-30, self.y-75, health_bar, 10), 0, border_radius=20)
 
 
 
