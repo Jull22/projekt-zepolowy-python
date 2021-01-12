@@ -1,6 +1,6 @@
 import pygame
 from menu import Menu
-import os
+import os, math
 
 menu_bg = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu.png")), (125, 50))
 upgrade = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "upgrade.png")), (45,45))
@@ -23,7 +23,10 @@ class Tower:
         self.menu.add_btn(upgrade, "Upgrade")
 
         self.damage= 1
+        self.place_color= (179, 179, 230, 100)
         self.tower_imgs=[]
+
+
 
     def draw(self, win):
 
@@ -34,13 +37,22 @@ class Tower:
 
 
 
+
     def draw_zone(self, win):
         #draw zone
         if self.selected:
             strefa= pygame.Surface((self.zone*4, self.zone*4), pygame.SRCALPHA, 32)
-            pygame.draw.circle(strefa, (128, 128, 189, 100), (self.zone, self.zone), self.zone, 0)
+            pygame.draw.circle(strefa, self.place_color, (self.zone, self.zone), self.zone, 0)
 
             win.blit(strefa, (self.x- self.zone +20, self.y- self.zone-70))
+
+    def draw_placement(self, win):
+        #draw zone
+
+        strefa= pygame.Surface((self.zone*4, self.zone*4), pygame.SRCALPHA, 32)
+        pygame.draw.circle(strefa, self.place_color, (62,62), 62, 0)
+
+        win.blit(strefa, (self.x-45 , self.y-125))
 
 
 
@@ -88,5 +100,17 @@ class Tower:
         self.menu.x= x
         self.menu.y= y
         self.menu.update()
+
+    def collide(self, otherTower):
+        x2= otherTower.x
+        y2= otherTower.y
+
+
+        dist= math.sqrt((x2-self.x)**2 + (y2-self.y)**2)
+        if dist >= 80:
+            return False
+        else:
+            return True
+
 
 

@@ -11,11 +11,11 @@ archer_imgs1 = []
 # wieża długodystansowa
 for x in range(1,4):
     tower_imgs1.append(
-        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/2", str(x) + ".png")), (120, 120)))
+        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archerTower/2", str(x) + ".png")), (110, 110)))
 # łucznik
 for x in range(2, 19):
     archer_imgs1.append(
-        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archer/2", str(x) + ".png")), (100, 100)))
+        pygame.transform.scale(pygame.image.load(os.path.join("game_assets/archer/2", str(x) + ".png")), (90, 90)))
 
 class ArcherTowerLong(Tower):
     def __init__(self, x, y):
