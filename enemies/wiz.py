@@ -21,8 +21,8 @@ class Wiz(Enemy):
     def __init__(self):
         super().__init__()
         self.name="wiz"
-        self.money=  5
-        self.max_health = 6
+        self.money=  25
+        self.max_health = 9
         self.health = self.max_health
         self.imgs= imgs[:]
 

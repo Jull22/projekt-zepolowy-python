@@ -3,12 +3,13 @@ import os
 from enemies.red import Red
 from enemies.ghost import Ghost
 from enemies.wiz import Wiz
+from enemies.boss import Boss
 from towers.archer_tower import ArcherTowerLong, ArcherTowerShort
 from towers.assistant_tower import RangeTower, DamageTower
 from menu import star
 from menu import VerticalMenu, PausePlayButton
 
-import time
+import time, random
 
 
 pygame.font.init()
@@ -35,9 +36,9 @@ assistant_tower_names = ["range", "damage"]
 
 
 # fale wrogów
-# (ghost, red, wizard)
-waves = [[20, 0, 0], [40, 0, 0], [60, 0, 0], [0, 20, 0], [0, 40, 0], [0, 60, 0], [20, 40, 0], [20, 30, 20],
-         [30, 50, 60], [40, 60, 80], [100, 60, 50]]
+# (ghost, red, wizard, boss)
+waves = [[13, 0, 0, 0], [20, 4, 0,0], [20, 10, 0,0], [0, 10, 6,0], [5, 10, 1,0],[0,0, 0,1], [20, 40, 0,0], [20, 30, 20,0],
+         [0, 5, 25,0], [5,20,25,0], [100, 60, 50,0], [0,0,0,4]]
 
 
 class Game:
@@ -49,7 +50,7 @@ class Game:
         self.support_towers = []
         self.attack_towers = []
         self.lives = 10
-        self.money = 25000
+        self.money = 1200
         self.bg = pygame.image.load(os.path.join("game_assets", "background.jpg"))
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
         # self.clicks=[]  #needed just to get PATH
@@ -63,8 +64,8 @@ class Game:
         self.pausePlayBtn = PausePlayButton(start_btn, pause_btn, self.width - 300, self.height - 50)
 
         self.menu = VerticalMenu(self.width - menu_side.get_width() + 20, 350, menu_side)
-        self.menu.add_btn(menu_side_icon1, "buy_damage", 1500)
-        self.menu.add_btn(menu_side_icon2, "buy_range", 1000)
+        self.menu.add_btn(menu_side_icon1, "buy_damage", 850)
+        self.menu.add_btn(menu_side_icon2, "buy_range", 750)
         self.menu.add_btn(menu_side_icon3, "buy_archer", 500)
         self.menu.add_btn(menu_side_icon4, "buy_archer2", 700)
 
@@ -80,13 +81,15 @@ class Game:
                 self.pause = True
                 self.pausePlayBtn.paused = self.pause
         else:
-            enemies_names = [Ghost(), Red(), Wiz()]
+            enemies_names = [Ghost(), Red(), Wiz(), Boss()]
 
             for x in range(len(self.current_wave)):
                 if self.current_wave[x] != 0:
                     self.enemys.append(enemies_names[x])
                     self.current_wave[x] = self.current_wave[x] - 1
                     break
+
+
 
     def run(self):
         run = True
@@ -96,7 +99,7 @@ class Game:
             # pygame.time.delay(0)
             clock.tick(80)
             if self.pause == False:
-                if time.time() - self.timer >= 0.5:  # co ile sekund ma wychodzić nowy wróg
+                if time.time() - self.timer >= 0.9:  # co ile sekund ma wychodzić nowy wróg
                     self.timer = time.time()
                     self.gen_enemies()
 
@@ -300,8 +303,12 @@ class Game:
 
         # narysuj level
         self.win.blit(wave_btn, (18, 10))
-        text = self.health_font.render("Level: " + str(self.wave), 1, (0, 0, 0))
-        self.win.blit(text, (22 + wave_btn.get_width() / 2 - text.get_width() / 2, 15))
+        if self.wave==len(waves) or self.wave==5:
+            text = self.health_font.render("BOSS", 1, (0, 0, 0))
+            self.win.blit(text, (22 + wave_btn.get_width() / 2 - text.get_width() / 2, 15))
+        else:
+            text = self.health_font.render("Level: " + str(self.wave), 1, (0, 0, 0))
+            self.win.blit(text, (22 + wave_btn.get_width() / 2 - text.get_width() / 2, 15))
 
         pygame.display.update()
 

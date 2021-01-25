@@ -19,7 +19,7 @@ class Tower:
         self.price = [0,0,0]
         self.level = 1
         self.selected= False
-        self.menu= Menu(self, self.x, self.y, menu_bg, [2000,"MAX"])
+        self.menu= Menu(self, self.x, self.y, menu_bg, [750,"MAX"])
         self.menu.add_btn(upgrade, "Upgrade")
 
         self.damage= 1

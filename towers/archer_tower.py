@@ -20,8 +20,8 @@ for x in range(2, 19):
 class ArcherTowerLong(Tower):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs= tower_imgs1
-        self.archer_imgs= archer_imgs1
+        self.tower_imgs= tower_imgs1[:]
+        self.archer_imgs= archer_imgs1[:]
         self.archer_count = 0
         self.zone = 200
         self.inZone = False
@@ -34,7 +34,7 @@ class ArcherTowerLong(Tower):
         self.moving= False
         self.name="archer"
 
-        self.menu= Menu(self, self.x, self.y, menu_bg, [2000,5000,"MAX"])
+        self.menu= Menu(self, self.x, self.y, menu_bg, [450,800,"MAX"])
         self.menu.add_btn(upgrade, "Upgrade")
 
 
@@ -124,8 +124,8 @@ for x in range(2, 19):
 class ArcherTowerShort(ArcherTowerLong):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs = tower_imgs
-        self.archer_imgs = archer_imgs
+        self.tower_imgs = tower_imgs[:]
+        self.archer_imgs = archer_imgs[:]
         self.archer_count = 0
         self.zone = 150
         self.inZone = False
@@ -135,7 +135,7 @@ class ArcherTowerShort(ArcherTowerLong):
         self.original_zone = self.zone
         self.name = "archer2"
 
-        self.menu= Menu(self, self.x, self.y, menu_bg, [2500,5300,"MAX"])
+        self.menu= Menu(self, self.x, self.y, menu_bg, [450,800,"MAX"])
         self.menu.add_btn(upgrade, "Upgrade")
 
 
